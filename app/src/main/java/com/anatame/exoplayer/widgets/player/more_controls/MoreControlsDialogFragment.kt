@@ -22,7 +22,7 @@ class MoreControlsDialogFragment(
         binding = PlayerControlsMoreBinding.inflate(layoutInflater)
         Timber.tag("tracksList").d(flordiaPlayer.currentTracksDataList.toString())
 
-        val moreControlsAdapter = MoreControlsAdapter(requireContext())
+        val moreControlsAdapter = MoreControlsAdapter(flordiaPlayer.currentBitrate)
 
         binding.recyclerView.apply {
             adapter = moreControlsAdapter
@@ -32,9 +32,9 @@ class MoreControlsDialogFragment(
         moreControlsAdapter.differ.submitList(flordiaPlayer.currentTracksDataList)
 
         moreControlsAdapter.setOnItemClickListener{
-            Toast.makeText(requireContext(), it.quality, Toast.LENGTH_SHORT).show()
             flordiaPlayer.setVideoQuality(it.bitrate)
             this.dismiss()
+            Toast.makeText(requireContext(), flordiaPlayer.currentBitrate.toString(), Toast.LENGTH_SHORT).show()
         }
 
         return binding.root

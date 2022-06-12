@@ -2,9 +2,7 @@ package com.anatame.exoplayer.widgets.player
 
 import android.content.Context
 import android.media.MediaFormat
-import android.util.Log
 import com.anatame.exoplayer.network.AppNetworkClient
-import com.github.vkay94.dtpv.DoubleTapPlayerView
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.ext.okhttp.OkHttpDataSource
 import com.google.android.exoplayer2.source.MediaSource
@@ -15,6 +13,9 @@ import timber.log.Timber
 
 class FlordiaPlayer(private val context: Context) {
     val player: ExoPlayer = makePlayer(context)
+
+    val currentBitrate: Int?
+        get() = player.videoFormat?.bitrate
 
     val currentTracksDataList = ArrayList<TrackData>()
 
@@ -52,6 +53,7 @@ class FlordiaPlayer(private val context: Context) {
                 .setMaxVideoBitrate(bitrate)
                 .setMinVideoBitrate(bitrate)
                 .build()
+
             Timber.tag("setVidQual").d(bitrate.toString())
 
             it.setVideoFrameMetadataListener(object : VideoFrameMetadataListener {

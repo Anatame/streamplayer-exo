@@ -2,15 +2,16 @@ package com.anatame.exoplayer.widgets.player.more_controls
 
 import android.content.Context
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.anatame.exoplayer.databinding.PlayerControlsMoreBinding
 import com.anatame.exoplayer.databinding.PlayerControlsMoreQualityBinding
 import com.anatame.exoplayer.widgets.player.TrackData
 
-class MoreControlsAdapter( val context: Context
+class MoreControlsAdapter(
+    private val currentBitrate: Int?
 ) : RecyclerView.Adapter<MoreControlsAdapter.MoreControlItemsViewHolder>() {
 
     inner class MoreControlItemsViewHolder(val binding: PlayerControlsMoreQualityBinding): RecyclerView.ViewHolder(binding.root)
@@ -45,7 +46,12 @@ class MoreControlsAdapter( val context: Context
             tvQuality.text = trackData.quality
             container.setOnClickListener {
                 onItemClickListener?.let{it(trackData)}
+                ivCheckmark.visibility = View.VISIBLE
             }
+            if(trackData.bitrate == currentBitrate)
+                ivCheckmark.visibility = View.VISIBLE
+            else
+                ivCheckmark.visibility = View.INVISIBLE
         }
     }
 
