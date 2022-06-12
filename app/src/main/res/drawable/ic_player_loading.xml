@@ -1,0 +1,19 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="200dp"
+    android:viewportWidth="100"
+    android:viewportHeight="100">
+
+  <group
+      android:pivotX="50"
+      android:pivotY="50"
+      android:name="loadingIcon"
+      android:strokeAlpha="0">
+    <path
+      android:pathData="M14,50A36,36 0,0 0,86 50A36,39 0,0 1,14 50"
+      android:fillColor="#ffffff"
+      android:strokeColor="#00000000"/>
+  </group>
+
+
+</vector>

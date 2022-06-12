@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <com.github.vkay94.dtpv.DoubleTapPlayerView
+        android:id="@+id/vidPlayer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:use_controller="true"
+        app:controller_layout_id="@layout/player_custom_controls"
+        app:dtpv_controller="@id/youtube_overlay"
+        app:surface_type="surface_view"
+        app:show_buffering="always"
+        app:resize_mode="fit"
+        />
+
+    <com.github.vkay94.dtpv.youtube.YouTubeOverlay
+        android:id="@+id/youtube_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible"
+        app:yt_playerView="@+id/vidPlayer" />
+
+</FrameLayout>
