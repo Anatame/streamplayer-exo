@@ -13,21 +13,13 @@
         android:layout_height="match_parent">
     </com.anatame.exoplayer.widgets.player.FlordiaPlayerSystem>
 
-    <Button
-        android:id="@+id/buttonu"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Button"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        />
 
     <Button
         android:id="@+id/loadBtn"
         android:text="Load"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toEndOf="@id/buttonu"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         />
 

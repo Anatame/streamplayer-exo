@@ -23,10 +23,6 @@ class MainActivity : AppCompatActivity() {
         binding.loadBtn.setOnClickListener {
             player?.playVideo(url, this)
         }
-
-        binding.buttonu.setOnClickListener{
-            player?.goLandScape()
-        }
     }
 
     override fun onResume() {
