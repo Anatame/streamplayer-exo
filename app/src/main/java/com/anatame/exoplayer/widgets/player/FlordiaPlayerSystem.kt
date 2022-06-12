@@ -11,9 +11,9 @@ import android.widget.ImageButton
 import com.anatame.exoplayer.MainActivity
 import com.anatame.exoplayer.R
 import com.anatame.exoplayer.databinding.PlayerCustomStubBinding
+import com.anatame.exoplayer.widgets.player.more_controls.MoreControlsDialogFragment
 import com.github.vkay94.dtpv.youtube.YouTubeOverlay
 import com.google.android.exoplayer2.ui.PlayerView
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 class FlordiaPlayerSystem (
     context: Context,
@@ -23,7 +23,7 @@ class FlordiaPlayerSystem (
     private val binding = PlayerCustomStubBinding.inflate(LayoutInflater.from(context), this, false)
     private val flordiaPlayer: FlordiaPlayer = FlordiaPlayer(context)
     private var activity: Activity? = null
-    private var dialog: FullScreenDialog? = null
+    private var dialog: FullScreenDialogFragment? = null
 
     // controls
     private lateinit var fullScreenBtn: ImageButton
@@ -47,8 +47,13 @@ class FlordiaPlayerSystem (
     }
 
     fun goLandScape(){
-        dialog = activity?.let { FullScreenDialog(it, flordiaPlayer.player, binding.vidPlayer) }
-        dialog?.show()
+//        dialog = activity?.let { FullScreenDialog(it, flordiaPlayer.player, binding.vidPlayer) }
+//        dialog?.show()
+
+        activity?.let{
+            dialog = FullScreenDialogFragment(it, flordiaPlayer, binding.vidPlayer)
+            dialog?.show((it as MainActivity).supportFragmentManager, "More Controls Dialog")
+        }
     }
 
     fun goPortrait(){
@@ -59,10 +64,6 @@ class FlordiaPlayerSystem (
 
     // lifecycle stuff
     fun resume(){
-        dialog?.let {
-            if(it.isShowing)
-                it.handleGoingFullScreen()
-        }
         flordiaPlayer.resume()
     }
     fun stop(){
@@ -104,7 +105,7 @@ class FlordiaPlayerSystem (
             goLandScape()
         }
         moreBtn.setOnClickListener{
-            val moreDialog = MoreControlsDialog.newInstance()
+            val moreDialog = MoreControlsDialogFragment(flordiaPlayer)
             activity?.let {moreDialog.show((it as MainActivity).supportFragmentManager, "More Controls Dialog")}
         }
     }

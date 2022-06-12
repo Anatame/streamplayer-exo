@@ -8,19 +8,20 @@ import android.os.Bundle
 import android.view.*
 import android.widget.FrameLayout
 import android.widget.ImageButton
+import androidx.fragment.app.DialogFragment
+import com.anatame.exoplayer.MainActivity
 import com.anatame.exoplayer.R
 import com.anatame.exoplayer.databinding.PlayerCustomStubLandscapeBinding
+import com.anatame.exoplayer.widgets.player.more_controls.MoreControlsDialogFragment
 import com.github.vkay94.dtpv.youtube.YouTubeOverlay
-import com.google.android.exoplayer2.ExoPlayer
 import com.google.android.exoplayer2.ui.AspectRatioFrameLayout
 import com.google.android.exoplayer2.ui.PlayerView
 
-class FullScreenDialog(
+class FullScreenDialogFragment(
     private val activity: Activity,
-    private val player: ExoPlayer,
+    private val flordiaPlayer: FlordiaPlayer,
     private val playerView: PlayerView,
-): Dialog(activity, android.R.style.Theme_Black_NoTitleBar_Fullscreen) {
-
+): DialogFragment() {
     private lateinit var binding: PlayerCustomStubLandscapeBinding
     private lateinit var newPlayerView: PlayerView
     // controls
@@ -32,15 +33,31 @@ class FullScreenDialog(
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setStyle(DialogFragment.STYLE_NORMAL,
+            android.R.style.Theme_Black_NoTitleBar_Fullscreen);
+        handleGoingFullScreen()
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         handleGoingFullScreen()
         binding = PlayerCustomStubLandscapeBinding.inflate(layoutInflater)
-        setContentView(binding.root)
 
         newPlayerView = binding.vidPlayer
-        PlayerView.switchTargetView(player, playerView, newPlayerView)
+        PlayerView.switchTargetView(flordiaPlayer.player, playerView, newPlayerView)
 
         configureOverlay()
         setUpControls()
+
+        return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        handleGoingFullScreen()
     }
 
     override fun onStart() {
@@ -48,22 +65,28 @@ class FullScreenDialog(
         handleGoingFullScreen()
     }
 
-    override fun onBackPressed() {
-        backToPortrait()
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        return object : Dialog(requireActivity(), theme) {
+            override fun onBackPressed() {
+                backToPortrait()
+            }
+        }
     }
 
     fun backToPortrait(){
         activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-        PlayerView.switchTargetView(player, newPlayerView, playerView)
-        notFullScreen(this.window!!)
+        PlayerView.switchTargetView(flordiaPlayer.player, newPlayerView, playerView)
         notFullScreen(activity.window!!)
         this.dismiss()
     }
 
     fun handleGoingFullScreen(){
         activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-        fullScreenActivity(this.window!!)
-        fullScreenActivity(activity.window!!)
+        this.dialog?.window?.let {
+            fullScreenActivity(it)
+        }
+            fullScreenActivity(activity.window!!)
+
     }
 
     private fun setUpControls(){
@@ -89,7 +112,23 @@ class FullScreenDialog(
         resizeBtn.setOnClickListener{
             resize()
         }
+        moreBtn.setOnClickListener{
+            handleShowingMoreControls()
+        }
+    }
 
+    private fun handleShowingMoreControls() {
+        val fm = (activity as MainActivity).supportFragmentManager
+        val moreDialog = MoreControlsDialogFragment(flordiaPlayer)
+        moreDialog.showNow(fm, "More Controls Dialog")
+        moreDialog.dialog?.setOnDismissListener {
+            handleGoingFullScreen()
+            moreDialog.dismiss()
+        }
+        moreDialog.dialog?.setOnCancelListener {
+            handleGoingFullScreen()
+            moreDialog.dismiss()
+        }
     }
 
     private fun resize(){
@@ -100,12 +139,20 @@ class FullScreenDialog(
             AspectRatioFrameLayout.RESIZE_MODE_ZOOM -> {
                 newPlayerView.resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FIT
             }
+            AspectRatioFrameLayout.RESIZE_MODE_FILL -> {
+
+            }
+            AspectRatioFrameLayout.RESIZE_MODE_FIXED_HEIGHT -> {
+
+            }
+            AspectRatioFrameLayout.RESIZE_MODE_FIXED_WIDTH -> {
+            }
         }
 
     }
 
     private fun configureOverlay() {
-        binding.youtubeOverlay.player(player)
+        binding.youtubeOverlay.player(flordiaPlayer.player)
         binding.youtubeOverlay
             .performListener(object : YouTubeOverlay.PerformListener {
                 override fun onAnimationStart() {

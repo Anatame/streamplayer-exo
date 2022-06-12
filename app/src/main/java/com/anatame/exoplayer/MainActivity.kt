@@ -16,7 +16,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         // dataNetWork val url = "https://ajye.mcloud.to/1aa38422f90b4f42a6d1671bcee5a045d52fe8044abab3bb554172f3a6369a877e43d210103e63b3aa76d45da94aec8ef384cb1a847cd2fed3e5f16b0527b4826f9040eb0105bc454191abab6d4e563926388a220700339a89c2d65980cd66c52b4df80c06/r/list.m3u8"
-        val url = "https://ajye.vizcloud.cloud/simple/EqPFI_gQBAro1HhYl67rC5surVwCurfvTRh7rqk+wYMnU94US2El/br/H1/v.m3u8"
+        val url = "https://ajye.vizcloud.cloud/simple/EqPFI_gQBAro1HhYl67rC5surVwCurfvTRh7rqk+wYMnU94US2El/br/list.m3u8#.mp4"
         player = binding.flordiaPlayer
         player?.playVideo(url, this)
 

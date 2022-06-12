@@ -15,7 +15,8 @@ import timber.log.Timber
 
 class FlordiaPlayer(private val context: Context) {
     val player: ExoPlayer = makePlayer(context)
-    private var trackListener: PlayerTrackListener? = null
+
+    val currentTracksDataList = ArrayList<TrackData>()
 
     fun playVideo(url: String, playerView: PlayerView){
         playerView.player = player
@@ -30,20 +31,16 @@ class FlordiaPlayer(private val context: Context) {
             override fun onTracksInfoChanged(tracksInfo: TracksInfo) {
                 super.onTracksInfoChanged(tracksInfo)
 
-                val trackDataList = ArrayList<TrackData>()
-
                 val tracks = tracksInfo.trackGroupInfos.first()
 
                 for(i in 0 until tracks.trackGroup.length){
-                    trackDataList.add(
-                        TrackData(
-                            "${tracks.trackGroup.getFormat(i).width} x ${tracks.trackGroup.getFormat(i).height}",
-                            tracks.trackGroup.getFormat(i).bitrate
-                        )
+                    val data = TrackData(
+                        "${tracks.trackGroup.getFormat(i).width} x ${tracks.trackGroup.getFormat(i).height}",
+                        tracks.trackGroup.getFormat(i).bitrate
                     )
+                    if(!currentTracksDataList.contains(data))
+                        currentTracksDataList.add(data)
                 }
-
-                trackListener?.handleTracksLoaded(trackDataList)
             }
         })
     }
@@ -104,7 +101,3 @@ data class TrackData(
     val quality: String,
     val bitrate: Int
 )
-
-interface PlayerTrackListener {
-    fun handleTracksLoaded(tracks: ArrayList<TrackData>)
-}
